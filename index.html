@@ -217,18 +217,18 @@
                             React.createElement('div', null,
                                 React.createElement('label', 
                                     { className: "block text-sm font-medium text-gray-700 mb-2" },
-                                    "🔑 OpenAI API Key"
+                                    "📱 Your Phone Number "
                                 ),
                                 React.createElement('input', {
-                                    type: "password",
-                                    value: apiKey,
-                                    onChange: (e) => setApiKey(e.target.value),
-                                    placeholder: "sk-proj-...",
-                                    className: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-rose-400 text-sm"
-                                }),
+                                                type: "tel",
+                                            value: phoneNumber,
+                                    onChange: (e) => setPhoneNumber(e.target.value),
+                                        placeholder: "+91 98765 43210 or 9876543210",
+                        className: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-rose-400 text-sm"
+})
                                 React.createElement('p', 
                                     { className: "text-xs text-gray-500 mt-1" },
-                                    "Your API key for intelligent conversations"
+                                    "We'll remember you across sessions"
                                 )
                             ),
                             React.createElement('button', {
