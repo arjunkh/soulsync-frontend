@@ -53,6 +53,7 @@
             const [isTyping, setIsTyping] = useState(false);
             const [waitingForResponse, setWaitingForResponse] = useState(false);
             const [apiKey, setApiKey] = useState('');
+            const [phoneNumber, setPhoneNumber] = useState('');
             const [showSetup, setShowSetup] = useState(true);
             const [currentMood, setCurrentMood] = useState('');
             const [currentInterests, setCurrentInterests] = useState([]);
@@ -220,15 +221,15 @@
                                     "🔑 OpenAI API Key"
                                 ),
                                 React.createElement('input', {
-                                    type: "password",
-                                    value: apiKey,
-                                    onChange: (e) => setApiKey(e.target.value),
+                                    type: "tel",
+                                    value: phoneNumber,
+                                    onChange: (e) => setPhoneNumber(e.target.value),
                                     placeholder: "Phone: +91 98765 43210",
                                     className: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-rose-400 text-sm"
                                 }),
                                 React.createElement('p', 
                                     { className: "text-xs text-gray-500 mt-1" },
-                                    "Your API key for intelligent conversations"
+                                    "We'll remember you across sessions"
                                 )
                             ),
                             React.createElement('button', {
