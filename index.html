@@ -62,6 +62,7 @@
             const [isVerifying, setIsVerifying] = useState(false);
             const [coupleCompassActive, setCoupleCompassActive] = useState(false);
             const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
+            const [currentQuestionId, setCurrentQuestionId] = useState('');
             const [showQuickReplies, setShowQuickReplies] = useState(false);
             const messagesEndRef = useRef(null);
 
@@ -116,7 +117,12 @@
                         },
                         body: JSON.stringify({
                             messages: conversationMessages,
-                            userId: currentUserId || 'user-default'
+                            userId: currentUserId || 'user-default',
+                            coupleCompassState: coupleCompassActive ? {
+                                active: true,
+                                questionIndex: currentQuestionNumber,
+                                questionId: currentQuestionId
+                            } : null
                         })
                     });
 
@@ -415,7 +421,7 @@
                 coupleCompassActive && React.createElement('div',
                     { className: "bg-gradient-to-r from-rose-400 to-pink-500 text-white p-2" },
                     React.createElement('div', { className: "text-center text-sm" },
-                        `🧭 Couple Compass • Question ${currentQuestionNumber} of 6`
+                        `🧭 Couple Compass • Question ${currentQuestionNumber + 1} of 6`
                     ),
                     React.createElement('div', { className: "w-full bg-white/30 h-1 rounded mt-1" },
                         React.createElement('div', {
