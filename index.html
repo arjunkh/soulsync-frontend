@@ -60,6 +60,9 @@
             const [currentMood, setCurrentMood] = useState('');
             const [currentInterests, setCurrentInterests] = useState([]);
             const [isVerifying, setIsVerifying] = useState(false);
+            const [coupleCompassActive, setCoupleCompassActive] = useState(false);
+            const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
+            const [showQuickReplies, setShowQuickReplies] = useState(false);
             const messagesEndRef = useRef(null);
 
             // Get backend URL from environment or use relative path
@@ -131,7 +134,19 @@
                         setCurrentInterests(data.userInsights.currentInterests);
                     }
 
-                    return data.choices[0].message.content;
+                    const responseText = data.choices[0].message.content;
+                    if (responseText.includes('A)') && responseText.includes('B)') &&
+                        responseText.includes('C)') && responseText.includes('D)')) {
+                      setCoupleCompassActive(true);
+                      setShowQuickReplies(true);
+                      const match = responseText.match(/Question (\d+) of/);
+                      if (match) setCurrentQuestionNumber(parseInt(match[1]));
+                    } else if (responseText.includes('Couple Compass just gave me')) {
+                      setCoupleCompassActive(false);
+                      setShowQuickReplies(false);
+                    }
+
+                    return responseText;
                 } catch (error) {
                     console.error('AI response error:', error);
                     return "I'm having trouble thinking right now. Can you try again?";
@@ -343,6 +358,23 @@
 
             const insightCount = Object.keys(userInsights).length;
 
+            const QuickReplyButtons = () => {
+                if (!showQuickReplies) return null;
+                return React.createElement('div',
+                    { className: "flex justify-center gap-2 p-2 bg-white/80" },
+                    ...['A', 'B', 'C', 'D'].map(option =>
+                        React.createElement('button', {
+                            key: option,
+                            onClick: () => {
+                                handleUserMessage(option);
+                                setShowQuickReplies(false);
+                            },
+                            className: "w-12 h-12 rounded-full border-2 border-rose-400 text-rose-600 font-bold hover:bg-rose-50"
+                        }, option)
+                    )
+                );
+            };
+
             return React.createElement('div', 
                 { className: "max-w-md mx-auto bg-gradient-to-br from-rose-50 to-pink-50 min-h-screen flex flex-col" },
                 // Header
@@ -378,6 +410,18 @@
                                 className: "text-gray-400 hover:text-gray-600"
                             }, React.createElement(Settings, { className: "w-4 h-4" }))
                         )
+                    )
+                ),
+                coupleCompassActive && React.createElement('div',
+                    { className: "bg-gradient-to-r from-rose-400 to-pink-500 text-white p-2" },
+                    React.createElement('div', { className: "text-center text-sm" },
+                        `🧭 Couple Compass • Question ${currentQuestionNumber} of 6`
+                    ),
+                    React.createElement('div', { className: "w-full bg-white/30 h-1 rounded mt-1" },
+                        React.createElement('div', {
+                            className: "bg-white h-full rounded transition-all",
+                            style: { width: `${(currentQuestionNumber / 6) * 100}%` }
+                        })
                     )
                 ),
                 // Intelligence Status
@@ -426,8 +470,9 @@
                     ),
                     React.createElement('div', { ref: messagesEndRef })
                 ),
+                React.createElement(QuickReplyButtons),
                 // Input
-                React.createElement('div', 
+                React.createElement('div',
                     { className: "p-4 bg-white/80 backdrop-blur border-t border-rose-100" },
                     React.createElement('div', 
                         { className: "flex space-x-2" },
