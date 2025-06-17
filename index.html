@@ -139,6 +139,30 @@
                         setCurrentMood(data.userInsights.detectedMood);
                         setCurrentInterests(data.userInsights.currentInterests);
                     }
+                    // Update Couple Compass state from backend response
+                    if (data.userInsights && data.userInsights.coupleCompassGameState) {
+                      const gameState = data.userInsights.coupleCompassGameState;
+                      
+                      if (gameState.active) {
+                        // Game is still active - update to next question
+                        setCoupleCompassActive(true);
+                        setCurrentQuestionNumber(gameState.questionIndex);
+                        setCurrentQuestionId(gameState.questionId || '');
+                        setShowQuickReplies(true);
+                        console.log('🧭 Updated Couple Compass state:', {
+                          questionIndex: gameState.questionIndex,
+                          questionId: gameState.questionId
+                        });
+                      } else if (gameState.justCompleted) {
+                        // Game just finished
+                        setCoupleCompassActive(false);
+                        setShowQuickReplies(false);
+                        setCurrentQuestionNumber(0);
+                        setCurrentQuestionId('');
+                        console.log('🎉 Couple Compass completed!');
+                      }
+                    }
+
 
                     const responseText = data.choices[0].message.content;
                     if (responseText.includes('A)') && responseText.includes('B)') &&
