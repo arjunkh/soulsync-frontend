@@ -55,6 +55,7 @@
             const [phoneNumber, setPhoneNumber] = useState('');
             const [userName, setUserName] = useState('');
             const [userGender, setUserGender] = useState('');
+            const [userAge, setUserAge] = useState('');
             const [currentUserId, setCurrentUserId] = useState('');
             const [showSetup, setShowSetup] = useState(true);
             const [currentMood, setCurrentMood] = useState('');
@@ -132,6 +133,20 @@
                     }
 
                     const data = await response.json();
+
+                    if (data.user) {
+                        const user = data.user;
+                        data.user = {
+                            id: user.user_id,
+                            name: userName.trim(),
+                            gender: userGender,
+                            age: user.age,
+                            phone: user.phone_number,
+                            isNewUser: user.total_conversations === 0,
+                            profileCompleteness: user.profile_completeness || 0,
+                            lastSeen: user.last_seen
+                        };
+                    }
                     
                     // Update user insights
                     if (data.userInsights) {
@@ -218,7 +233,12 @@
                     alert('Please select your gender');
                     return;
                 }
-                
+
+                if (!userAge || parseInt(userAge) < 18) {
+                    alert('Please enter a valid age (must be 18 or above)');
+                    return;
+                }
+
                 if (!phoneNumber.trim()) {
                     alert('Please enter your phone number');
                     return;
@@ -236,7 +256,8 @@
                         body: JSON.stringify({
                             phoneNumber: phoneNumber.trim(),
                             userName: userName.trim(),
-                            userGender: userGender
+                            userGender: userGender,
+                            userAge: parseInt(userAge)
                         })
                     });
                     
@@ -339,11 +360,32 @@
                                 }, 
                                     React.createElement('option', { value: '' }, "Select your gender"),
                                     React.createElement('option', { value: 'Male' }, "👨 Male"),
-                                    React.createElement('option', { value: 'Female' }, "👩 Female")
+                                React.createElement('option', { value: 'Female' }, "👩 Female")
                                 )
                             ),
                             React.createElement('div', null,
-                                React.createElement('label', 
+                                React.createElement('label',
+                                    { className: "block text-sm font-medium text-gray-700 mb-2" },
+                                    "🎂 Your Age"
+                                ),
+                                React.createElement('input', {
+                                    type: "number",
+                                    value: userAge,
+                                    onChange: (e) => setUserAge(e.target.value),
+                                    placeholder: "Your age (e.g., 28)",
+                                    min: "18",
+                                    max: "60",
+                                    required: true,
+                                    disabled: isVerifying,
+                                    className: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-rose-400 text-sm disabled:bg-gray-50 mb-4"
+                                }),
+                                React.createElement('p',
+                                    { className: "text-xs text-gray-500 mt-1 mb-4" },
+                                    "Must be 18 or above to use SoulSync"
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('label',
                                     { className: "block text-sm font-medium text-gray-700 mb-2" },
                                     "📱 Your Phone Number"
                                 ),
