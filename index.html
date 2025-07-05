@@ -272,9 +272,7 @@
             const messagesEndRef = useRef(null);
 
             // Get backend URL from environment or use relative path
-            const backendUrl = window.location.origin.includes('railway') 
-                ? 'https://soulsync-backend-production.up.railway.app'
-                : window.location.origin;
+            const backendUrl = 'https://soulsync-backend-production.up.railway.app';
 
             const scrollToBottom = () => {
                 messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
