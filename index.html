@@ -353,9 +353,9 @@
                     // Update user insights
                     if (data.userInsights) {
                         setUserInsights(data.userInsights);
-                        setCurrentMood(data.userInsights.detectedMood);
-                        setCurrentInterests(data.userInsights.currentInterests);
-                        
+                        setCurrentMood(data.userInsights.detectedMood || '');
+                        setCurrentInterests(data.userInsights.currentInterests || []);
+
                         // Check if Your Story is ready
                         if (data.userInsights.yourStoryReady || data.userInsights.reportAvailable) {
                             if (!storyAvailable) {
@@ -757,14 +757,14 @@
                         )
                     ),
                     // Intelligence Status
-                    (currentMood || currentInterests.length > 0) && React.createElement('div', 
+                    (currentMood || (currentInterests && currentInterests.length > 0)) && React.createElement('div',
                         { className: "bg-gradient-to-r from-purple-50 to-blue-50 border-b border-purple-100 p-3" },
-                        React.createElement('div', 
+                        React.createElement('div',
                             { className: "flex items-center space-x-2 text-xs" },
                             React.createElement(Zap, { className: "w-3 h-3 text-purple-500" }),
-                            React.createElement('span', 
+                            React.createElement('span',
                                 { className: "text-purple-700" },
-                                `${currentMood ? `Mood: ${currentMood.replace('_', ' ')}` : ''}${currentMood && currentInterests.length > 0 ? ' • ' : ''}${currentInterests.length > 0 ? `Interests: ${currentInterests.join(', ').replace(/_/g, ' ')}` : ''}`
+                                `${currentMood ? `Mood: ${currentMood.replace('_', ' ')}` : ''}${currentMood && currentInterests && currentInterests.length > 0 ? ' • ' : ''}${currentInterests && currentInterests.length > 0 ? `Interests: ${currentInterests.join(', ').replace(/_/g, ' ')}` : ''}`
                             )
                         )
                     ),
@@ -824,9 +824,9 @@
                             }, React.createElement(Send, { className: "w-4 h-4" }))
                         ),
                         // Insights
-                        insightCount > 0 && React.createElement('div', 
+                        insightCount > 0 && React.createElement('div',
                             { className: "mt-2 text-xs text-gray-500 text-center" },
-                            `Learning: ${Object.keys(userInsights).join(', ').replace(/_/g, ' ')}`
+                            `Learning: ${Object.keys(userInsights).filter(key => key !== 'coupleCompassActive' && key !== 'coupleCompassGameState').join(', ').replace(/_/g, ' ')}`
                         )
                     )
                 ),
