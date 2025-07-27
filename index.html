@@ -319,6 +319,13 @@
                         if (data.userInsights.reportAvailable && !storyAvailable) {
                             setStoryAvailable(true);
                             setShowStoryCelebration(true);
+
+                            // Add personalized notification message
+                            setTimeout(() => {
+                                addMessage(`✨ Exciting news, ${userName}! Your personalized story is ready! It's a beautiful summary of who you are and what you're looking for. You can read it anytime in the "Your Story" tab above. 💕`, true);
+                            }, 500);
+
+                            // Hide celebration badge after 5 seconds
                             setTimeout(() => setShowStoryCelebration(false), 5000);
                         }
                         
