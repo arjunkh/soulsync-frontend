@@ -410,10 +410,6 @@
                             simulateTyping();
                             if (data.user.isNewUser) {
                                 setTimeout(() => addMessage(`Hey ${userName.trim()}! 😊`, true), 1500);
-                                setTimeout(() => {
-                                    simulateTyping();
-                                    setTimeout(() => addMessage("Before I ask anything... did you eat today?", true), 1500);
-                                }, 3500);
                             } else {
                                 setTimeout(() => addMessage(`Welcome back, ${userName.trim()}! 💕`, true), 1500);
                                 setTimeout(() => {
